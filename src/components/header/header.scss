@@ -1,0 +1,24 @@
+@import "../../common/sass/variable.scss";
+@import "../../common/sass/mixin.scss";
+.header {
+  width: 100%;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  font-size: 0;
+  .icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 30px;
+    height: 32px;
+    margin-right: 9px;
+    @include bg-image('logo');
+    background-size: 30px 32px;
+  }
+  .text {
+    display: inline-block;
+    vertical-align: top;
+    font-size: $font-size-large;
+    color: $color-theme;
+  }
+}
