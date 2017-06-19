@@ -1,7 +1,7 @@
 <template>
   <div class="recommend" ref="scrollRecommend">
     <div class="recommend-content">
-      <div class="top-tip" :style="{'top':showTopTip?'0':'-60px'}">{{topTip}}</div>
+      <!-- <div class="top-tip" :style="{'top':showTopTip?'0':'-60px'}">{{topTip}}</div> -->
       <div class="img-swiper" :style="{'margin-top':showTopTip?'60px':'0'}">
         <swiper :options="swiperOption">
           <swiper-slide v-for="item in recommends" :key="item.id">
@@ -13,7 +13,7 @@
       <div class="radio-wrapper">
         <h1 class="title">热门电台</h1>
         <ul class="radio-list">
-          <li v-for="list in radioList" :key="list.radioid" class="radio-item" v-ripple="'rgba(255, 255, 255, 0.5)'">
+          <li v-for="list in radioList" :key="list.radioid" class="radio-item" v-ripple="'rgba(255, 255, 255, 0.3)'">
             <a :href="list.linkUrl">
               <div class="radio-img">
                 <img v-lazy="list.picUrl">
@@ -37,6 +37,7 @@
       </div>
       <div class="bottom-tip">{{bottomTip}}</div>
     </div>
+    <loading :showLoading="showLoading"></loading>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -54,6 +55,7 @@ import {
 } from 'vue-awesome-swiper';
 // import scroll from 'base/scroll/scroll';
 import BScroll from 'better-scroll';
+import loading from 'base/loading/loading';
 
 export default {
   data() {
@@ -72,7 +74,8 @@ export default {
         bottomTip: '查看更多',
         topTip: '下拉刷新',
         loadMore: true,
-        showTopTip: false
+        showTopTip: false,
+        showLoading: true
       };
     },
     created() {
@@ -106,14 +109,13 @@ export default {
             this.songList = this.songList.concat(res.data.list);
             setTimeout(() => {
               this.scroll.refresh();
-              this.topTip = '刷新成功';
-              console.log(this.topTip);
+              this.showLoading = false;
+              // this.topTip = '刷新成功';
             }, 1000);
-            setTimeout(() => {
-              this.showTopTip = false;
-              this.topTip = '下拉刷新';
-              console.log(this.topTip);
-            }, 5000);
+            // setTimeout(() => {
+            //   this.showTopTip = false;
+            //   this.topTip = '下拉刷新';
+            // }, 5000);
           }
         });
       },
@@ -129,35 +131,35 @@ export default {
         }
         this.scroll.on('touchend', function(pos) {
           // 上拉加载
-          if (pos.y < (this.maxScrollY - 50) && _this.loadMore) {
+          if (pos.y < (this.maxScrollY - 30) && _this.loadMore) {
             _this.bottomTip = '加载中…';
             setTimeout(() => {
               _this.reloadData();
             }, 1000);
           }
           // 下拉刷新
-          if (pos.y > 50) {
-            console.log(pos.y, 2);
-            _this.topTip = '正在刷新…';
-            _this.showTopTip = true;
-            setTimeout(() => {
-              _this.start = 0;
-              _this.end = 29;
-              _this.bottomTip = '';
-              _this.songList = [];
-              _this._getRecommend();
-              _this._getSongList(_this.start, _this.end);
-            }, 1000);
-          }
+          // if (pos.y > 50) {
+          //   console.log(pos.y, 2);
+          //   _this.topTip = '正在刷新…';
+          //   _this.showTopTip = true;
+          //   setTimeout(() => {
+          //     _this.start = 0;
+          //     _this.end = 29;
+          //     _this.bottomTip = '';
+          //     _this.songList = [];
+          //     _this._getRecommend();
+          //     _this._getSongList(_this.start, _this.end);
+          //   }, 1000);
+          // }
         });
-        this.scroll.on('scroll', function(pos) {
-          console.log(pos.y, 1);
-          if (pos.y > 50) {
-            _this.topTip = '释放立即刷新';
-          } else {
-            _this.topTip = '下拉刷新';
-          }
-        });
+        // this.scroll.on('scroll', function(pos) {
+        //   console.log(pos.y, 1);
+        //   if (pos.y > 50) {
+        //     _this.topTip = '释放立即刷新';
+        //   } else {
+        //     _this.topTip = '下拉刷新';
+        //   }
+        // });
       },
       reloadData() {
         this.start += 30;
@@ -171,24 +173,11 @@ export default {
         }
       }
     },
-    filters: {
-      handlerData: function(val) {
-        val = val.replace(/&#32;/g, '').replace(/&#124;/g, '').replace(/&#38;/g, '').replace(/&#63;/g, '').replace(/&#60;/g, '').replace(/&#62;/g, '').replace(/&#61;/g, '').replace(/&#58;/g, '');
-        var sublen = 20;
-        var width = document.body.clientWidth;
-        if (width <= 320) {
-          sublen = 15;
-        }
-        if (width > 320 && width <= 375) {
-          sublen = 18;
-        }
-        if (val.length > sublen) {}
-        return val;
-      }
-    },
+    filters: {},
     components: {
       swiper,
-      swiperSlide
+      swiperSlide,
+      loading
     }
 };
 </script>

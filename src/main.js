@@ -5,7 +5,7 @@ import router from './router';
 import fastclick from 'fastclick';
 import VueLazyload from 'vue-lazyload';
 import Ripple from 'vue-ripple-directive';
-// import store from './store';
+import store from './store';
 
 import 'common/sass/index.scss';
 
@@ -23,5 +23,6 @@ Vue.use(VueLazyload, {
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 });
