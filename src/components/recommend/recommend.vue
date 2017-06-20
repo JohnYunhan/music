@@ -38,6 +38,7 @@
       <div class="bottom-tip">{{bottomTip}}</div>
     </div>
     <loading :showLoading="showLoading"></loading>
+    <neterror :netErr="netErr"></neterror>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -56,6 +57,7 @@ import {
 // import scroll from 'base/scroll/scroll';
 import BScroll from 'better-scroll';
 import loading from 'base/loading/loading';
+import neterror from 'base/network-error/network-error';
 
 export default {
   data() {
@@ -75,12 +77,15 @@ export default {
         topTip: '下拉刷新',
         loadMore: true,
         showTopTip: false,
-        showLoading: true
+        showLoading: true,
+        netErr: false,
+        timer: null
       };
     },
     created() {
       this._getRecommend();
       this._getSongList(this.start, this.end);
+      // this.loadData();
     },
     methods: {
       _getRecommend() {
@@ -110,6 +115,7 @@ export default {
             setTimeout(() => {
               this.scroll.refresh();
               this.showLoading = false;
+              // clearTimeout(this.timer);
               // this.topTip = '刷新成功';
             }, 1000);
             // setTimeout(() => {
@@ -171,13 +177,26 @@ export default {
           this.checkloaded = true;
           this.scroll.refresh();
         }
+      },
+      judgeNet() {
+        this.timer = setTimeout(() => {
+          this.showLoading = false;
+          this.netErr = true;
+        }, 2 * 1000);
+      },
+      loadData() {
+        this.showLoading = true;
+        this.judgeNet();
+        this._getRecommend();
+        this._getSongList(this.start, this.end);
       }
     },
     filters: {},
     components: {
       swiper,
       swiperSlide,
-      loading
+      loading,
+      neterror
     }
 };
 </script>

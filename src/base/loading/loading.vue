@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
-    <div class="loading-wrapper" v-show="showLoading">
-      <div class="loading-container">
+    <div class="loading-wrapper" v-show="showLoading" :style="{'top':fixTop+'px'}">
+      <div class="loading-container" :style="{'top':loadingTop+'%'}">
         <img class="img" src="./loading.gif" width="24">
         <span class="text">正在载入…</span>
       </div>
@@ -14,6 +14,14 @@ export default {
     showLoading: {
       type: Boolean,
       default: false
+    },
+    fixTop: {
+      type: Number,
+      default: 88
+    },
+    loadingTop: {
+      type: Number,
+      default: 30
     }
   }
 };
@@ -21,7 +29,6 @@ export default {
 <style scoped>
 .loading-wrapper {
   position: fixed;
-  top: 88px;
   bottom: 0;
   z-index: 999;
   width: 100%;
@@ -44,7 +51,6 @@ export default {
 
 .loading-wrapper .loading-container {
   position: absolute;
-  top: 30%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   text-align: center;
